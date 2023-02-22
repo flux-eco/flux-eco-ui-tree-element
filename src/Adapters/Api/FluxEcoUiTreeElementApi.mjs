@@ -29,9 +29,9 @@ import {TreeNodeElementCallbacks} from "../../Core/Ports/TreeNodeElementCallback
 /**
  * Creates and manages states of tree data
  *
- * @type FluxUiTreeStateApi
+ * @type FluxEcoUiTreeElementApi
  */
-export class FluxUiTreeElementApi {
+export class FluxEcoUiTreeElementApi {
     name = "flux-eco-ui-tree-element";
     #service;
 
@@ -41,10 +41,10 @@ export class FluxUiTreeElementApi {
 
     /**
      * @param {function|null} onClicked
-     * @return {Promise<FluxUiTreeElementApi>}
+     * @return {Promise<FluxEcoUiTreeElementApi>}
      */
     static async new(onClicked) {
-        return new FluxUiTreeElementApi(await TreeElementService.new(await TreeNodeElementCallbacks.new(onClicked)));
+        return new FluxEcoUiTreeElementApi(await TreeElementService.new(await TreeNodeElementCallbacks.new(onClicked)));
     }
 
     /**

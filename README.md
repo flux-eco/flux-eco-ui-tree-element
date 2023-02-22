@@ -41,7 +41,7 @@
 ## Usage
 
 ``` js
-const treeElementApi = await FluxUiTreeElementApi.new((nodeState) => {
+const treeElementApi = await FluxEcoUiTreeElementApi.new((nodeState) => {
     // onClicked event handler function
     console.log(`Node clicked with ID ${nodeState.id.value}`);
 });
