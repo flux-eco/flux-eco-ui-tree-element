@@ -25,10 +25,11 @@ export class TreeElementService {
     /**
      * @param {Object} parentElement
      * @param {TreeState} treeState
+     * @param {FluxEcoUiNodeLineElement|null} fluxEcoUiNodeLineElement
      * @return {Promise<void>}
      */
-    async render(parentElement, treeState) {
-        const element = await FluxEcoUiTreeElement.new(treeState.id.path, treeState.nodes, this.#nodeElementCallbacks);
+    async render(parentElement, treeState, fluxEcoUiNodeLineElement) {
+        const element = await FluxEcoUiTreeElement.new(treeState.id.path, treeState.nodes, this.#nodeElementCallbacks, fluxEcoUiNodeLineElement);
         while (parentElement.firstChild) {
             parentElement.removeChild(parentElement.firstChild);
         }
