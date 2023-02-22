@@ -8,7 +8,7 @@
  * @property {Object.<string, Object>} apiActionPayloads - The actions with payload that can be performed on the api.
  * @property {NodeState[]} children - array of child nodeEntityMap
  */
-export class FluxUITreeElement extends HTMLElement {
+export class FluxEcoUiTreeElement extends HTMLElement {
     /**
      * @var {FluxUiTreeElementNodeElementCallbacks}
      */
@@ -18,7 +18,7 @@ export class FluxUITreeElement extends HTMLElement {
     /**
      * @private
      * @param {NodeState[]} nodes
-     * @param {FluxUiTreeElementNodeElementCallbacks} nodeElementCallbacks
+     * @param {TreeNodeElementCallbacks} nodeElementCallbacks
      */
     constructor(treeId, nodes, nodeElementCallbacks) {
         super();
@@ -31,10 +31,10 @@ export class FluxUITreeElement extends HTMLElement {
     /**
      * @param {{onClicked}} nodeElementCallbacks
      * @param nodes
-     * @return {Promise<FluxUITreeElement>}
+     * @return {Promise<FluxEcoUiTreeElement>}
      */
     static async new(treeId, nodes, nodeElementCallbacks) {
-        return new FluxUITreeElement(treeId, nodes, nodeElementCallbacks);
+        return new FluxEcoUiTreeElement(treeId, nodes, nodeElementCallbacks);
     }
 
     async connectedCallback() {
@@ -85,4 +85,4 @@ export class FluxUITreeElement extends HTMLElement {
     }
 }
 
-customElements.define('flux-ui-tree', FluxUITreeElement);
+customElements.define('flux-eco-ui-tree', FluxEcoUiTreeElement);

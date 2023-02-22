@@ -1,6 +1,6 @@
-import {FluxUITreeElement} from "../Domain/FluxUiTreeElement.mjs";
+import {FluxEcoUiTreeElement} from "../Domain/FluxEcoUiTreeElement.mjs";
 
-export class FluxUiTreeElementNodeElementCallbacks {
+export class TreeNodeElementCallbacks {
 
     /**
      * {function|null}
@@ -16,10 +16,10 @@ export class FluxUiTreeElementNodeElementCallbacks {
 
     /**
      * @param {function|null} onClicked
-     * @return {Promise<FluxUiTreeElementNodeElementCallbacks>}
+     * @return {Promise<TreeNodeElementCallbacks>}
      */
     static async new(onClicked) {
-        return new FluxUiTreeElementNodeElementCallbacks(onClicked);
+        return new TreeNodeElementCallbacks(onClicked);
     }
 
     /**

@@ -1,6 +1,6 @@
-import {FluxUITreeElement} from "../Domain/FluxUiTreeElement.mjs";
+import {FluxEcoUiTreeElement} from "../Domain/FluxEcoUiTreeElement.mjs";
 
-export class FluxUiTreeElementService {
+export class TreeElementService {
 
     /**
      * @var {FluxUiTreeElementNodeElementCallbacks}
@@ -15,11 +15,11 @@ export class FluxUiTreeElementService {
     }
 
     /**
-     * @param {FluxUiTreeElementNodeElementCallbacks} nodeElementCallbacks
-     * @return {Promise<FluxUiTreeElementService>}
+     * @param {TreeNodeElementCallbacks} nodeElementCallbacks
+     * @return {Promise<TreeElementService>}
      */
     static async new(nodeElementCallbacks) {
-        return new FluxUiTreeElementService(nodeElementCallbacks);
+        return new TreeElementService(nodeElementCallbacks);
     }
 
     /**
@@ -28,7 +28,7 @@ export class FluxUiTreeElementService {
      * @return {Promise<void>}
      */
     async render(parentElement, treeState) {
-        const element = await FluxUITreeElement.new(treeState.id.path, treeState.nodes, this.#nodeElementCallbacks);
+        const element = await FluxEcoUiTreeElement.new(treeState.id.path, treeState.nodes, this.#nodeElementCallbacks);
         while (parentElement.firstChild) {
             parentElement.removeChild(parentElement.firstChild);
         }

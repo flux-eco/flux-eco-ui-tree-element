@@ -23,8 +23,8 @@
  */
 
 
-import {FluxUiTreeElementService} from "../../Core/Ports/FluxUiTreeElementService.mjs";
-import {FluxUiTreeElementNodeElementCallbacks} from "../../Core/Ports/FluxUiTreeElementNodeElementCallbacks.mjs";
+import {TreeElementService} from "../../Core/Ports/TreeElementService.mjs";
+import {TreeNodeElementCallbacks} from "../../Core/Ports/TreeNodeElementCallbacks.mjs";
 
 /**
  * Creates and manages states of tree data
@@ -44,7 +44,7 @@ export class FluxUiTreeElementApi {
      * @return {Promise<FluxUiTreeElementApi>}
      */
     static async new(onClicked) {
-        return new FluxUiTreeElementApi(await FluxUiTreeElementService.new(await FluxUiTreeElementNodeElementCallbacks.new(onClicked)));
+        return new FluxUiTreeElementApi(await TreeElementService.new(await TreeNodeElementCallbacks.new(onClicked)));
     }
 
     /**
