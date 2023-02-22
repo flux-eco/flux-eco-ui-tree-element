@@ -34,7 +34,6 @@
  * @property {Id} id - The id as ID object of the node.
  * @property {NodeStateStatus} status - The status of the node, e.g. whether it is expanded or deleted.
  * @property {null|Object} data - The data of the node, conforming to the schema declared at tree level - null in case of rootNodeEntity
- * @property {Object.<string, Object>} apiActionPayloads - The actions with payload that can be performed on the api.
  * @property {NodeState[]} children - array of child nodes
 */
 ```
@@ -51,7 +50,7 @@ const parentElement = document.getElementById('my-tree-container');
 const treeState = {
   id: { value: 'my-tree', path: 'flux-eco-ui-tree-state/my-tree' },
   nodeDataSchema: { type: 'object', properties: { label: { type: 'string' } } },
-  rootNode: { treeId: { value: 'my-tree', path: 'flux-eco-ui-tree-state/my-tree' }, id: { value: 'rootNode', path: '/rootNode' }, data: null, children: [(...)], apiActionPayloads: null, status: { expanded: true } },
+  rootNode: { treeId: { value: 'my-tree', path: 'flux-eco-ui-tree-state/my-tree' }, id: { value: 'rootNode', path: '/rootNode' }, data: null, children: [(...)], status: { expanded: true } },
   nodes: [
     { treeId: { value: my-tree, path: flux-eco-ui-tree-state/my-tree }, parentId: null, id: { value: "my-first-node", path: /nodes/my-first-node },status: {expanded: true, deleted: false }, data: { label: My First Node } (...)},
     { (...) }
