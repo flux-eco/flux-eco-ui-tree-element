@@ -50,9 +50,8 @@ export class FluxEcoUiTreeElementApi {
     /**
      * @param {Object} parentElement
      * @param {TreeState} treeState
-     * @param {FluxEcoUiNodeLineElement|null} fluxEcoUiNodeLineElement
      */
-    async render(parentElement, treeState, fluxEcoUiNodeLineElement = null) {
-        this.#service.render(parentElement, treeState, fluxEcoUiNodeLineElement);
+    async render(parentElement, treeState) {
+        this.#service.render(parentElement, treeState);
     }
 }

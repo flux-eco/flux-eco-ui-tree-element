@@ -1,4 +1,5 @@
 import {FluxEcoUiTreeElementState} from "./ValueObjects/FluxEcoUiTreeElementState.mjs";
+import {expandableNodeLineCss} from "../../../styles/expandableNodeLineCss.mjs";
 
 /**
  * @typedef NodeState
@@ -26,117 +27,93 @@ export class FluxEcoUiTreeElement extends HTMLElement {
      * @param {string} treeId
      * @param {NodeState[]} nodes
      * @param {TreeNodeElementCallbacks} nodeElementCallbacks
-     * @param {FluxEcoUiNodeLineElement|null} fluxEcoUiNodeLineElement
      */
-    constructor(treeId, nodes, nodeElementCallbacks, fluxEcoUiNodeLineElement) {
+    constructor(treeId, nodes, nodeElementCallbacks) {
         super();
         this.id = treeId;
         this.nodes = nodes;
         this.#nodeElementCallbacks = nodeElementCallbacks;
         this.#shadow = this.attachShadow({mode: 'open'});
-        this.#fluxEcoUiTreeElementState = FluxEcoUiTreeElementState.new(fluxEcoUiNodeLineElement);
+        this.#fluxEcoUiTreeElementState = FluxEcoUiTreeElementState.new();
 
-        const link = document.createElement("link");
-        link.id = "style";
-        link.rel = "stylesheet";
-        link.type="text/css"
-        link.href = "/Customizing/flux-eco-ui/styles/style.css";
-         document.head.appendChild(link)
+        const styleElement = document.createElement("style");
+        styleElement.textContent = expandableNodeLineCss;
+        document.head.appendChild(styleElement)
     }
 
     /**
      * @param {string} treeId
      * @param nodes
      * @param {{onClicked}} nodeElementCallbacks
-     * @param {FluxEcoUiTreeElement} fluxEcoUiNodeLineElement
      * @return {Promise<FluxEcoUiTreeElement>}
      */
-    static async new(treeId, nodes, nodeElementCallbacks, fluxEcoUiNodeLineElement) {
-        return new FluxEcoUiTreeElement(treeId, nodes, nodeElementCallbacks, fluxEcoUiNodeLineElement);
+    static async new(treeId, nodes, nodeElementCallbacks) {
+        return new FluxEcoUiTreeElement(treeId, nodes, nodeElementCallbacks);
     }
 
     async connectedCallback() {
         const rootNode = document.createElement("ul");
         for (const node of this.nodes) {
             if (node.parentId === null) {
-                const nodeElement = this.renderNode(node);
+                const nodeElement = await this.renderNode(node);
                 rootNode.appendChild(nodeElement)
             }
         }
 
         this.#shadow.appendChild(rootNode);
 
-        // Get the link element that loads the font in the light DOM
-        const fontLink = await document.getElementById('style');
-console.log(fontLink);
-
-
-        // Create a style element in the shadow root to load the font
-        const fontStyles = document.createElement('style');
-        fontStyles.textContent = `
-                                  @font-face {
-                                    font-family: 'il-icons';
-                                    src: url(Customizing/global/skin/skin_medi_ilias_7/fonts/Iconfont/il-icons.woff) format('woff');
-                                  }
-                                  :host {
-                                    font-family: 'il-icons';
-                                  }
-                                   .collapsed:before {
-                                        font-family: 'il-icons';
-                                        content: '\\e606';
-                                    }
-                                `;
-        this.#shadow.appendChild(fontStyles);
+        const styleElement = document.createElement('style');
+        styleElement.textContent = expandableNodeLineCss;
+        this.#shadow.appendChild(styleElement);
     }
 
 
-/**
- * Renders a node and its children recursively.
- *
- * @param {NodeState} node - The node to render.@font-face {
-  font-family: 'il-icons';
-  src: url('fonts/Iconfont/il-icons.woff') format('woff'), url('fonts/Iconfont/il-icons.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
- * @returns {HTMLElement} The rendered node element.
- */
-renderNode(node)
-{
-    // create a node element
-    const nodeElement = document.createElement('li');
-    const nodeLine = document.createElement('span');
+    /**
+     * Renders a node and its children recursively.
+     *
+     * @param {NodeState} node - The node to render
+     * @returns {HTMLElement} The rendered node element.
+     */
+    async renderNode(node) {
+        // create a node element
+        const nodeElement = document.createElement('li');
+        const nodeLine = document.createElement('span');
+        nodeLine.className = "nodeLine";
 
+        const nodeLabel = document.createElement('span');
 
-    const nodeLabel = document.createElement('span');
-    nodeLabel.className = "collapsed"
-    if (this.#fluxEcoUiTreeElementState.fluxEcoUiNodeLineElement !== null) {
-        nodeLabel.innerText = this.#fluxEcoUiTreeElementState.fluxEcoUiNodeLineElement.render(node.data)
-    } else {
-        nodeLabel.innerText = node.data.label;
-    }
-
-    nodeLine.appendChild(nodeLabel);
-    nodeElement.appendChild(nodeLine);
-
-    // add a click event listener to expand/collapse the node
-    nodeLine.addEventListener('click', async () => {
-        this.#nodeElementCallbacks.onClicked(node);
-    });
-
-    // recursively render child nodes
-    if (node.status.expanded) {
-        const nodeChildren = document.createElement("ul");
-        for (const child of node.children) {
-            const childElement = this.renderNode(child);
-            nodeChildren.appendChild(childElement);
+        nodeLabel.className = "nodeLabel";
+        if (node.children.length) {
+            if (node.status.expanded === false) {
+                nodeLabel.classList.add("collapsed");
+            }
+            if (node.status.expanded === true) {
+                nodeLabel.classList.add("expanded");
+            }
         }
-        nodeElement.appendChild(nodeChildren);
+
+        nodeLabel.innerText = node.data.label;
+        nodeLine.appendChild(nodeLabel);
+        nodeElement.appendChild(nodeLine);
+
+        // add a click event listener to expand/collapse the node
+        nodeLine.addEventListener('click', async () => {
+            this.#nodeElementCallbacks.onClicked(node);
+        });
+
+        // recursively render child nodes
+        if (node.status.expanded) {
+            const nodeChildren = document.createElement("ul");
+            for (const child of node.children) {
+                const childElement = await this.renderNode(child);
+                nodeChildren.appendChild(childElement);
+            }
+            nodeElement.appendChild(nodeChildren);
+        }
+
+
+        return nodeElement;
     }
-
-
-    return nodeElement;
-}
 }
 
 customElements.define('flux-eco-ui-tree', FluxEcoUiTreeElement);
