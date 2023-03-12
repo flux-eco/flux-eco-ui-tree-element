@@ -3,8 +3,10 @@
 !README.md
 !app
 !app/assets
+!app/assets/fonts
 !app/configs
 !app/schemas
 !app/types
 !examples
 !examples/public
+!examples/public/flux-eco-ui-tree-element
