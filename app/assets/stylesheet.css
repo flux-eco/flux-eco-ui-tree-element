@@ -1,0 +1,49 @@
+:host {
+    font-size: 14px;
+    font-family: 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+    line-height: 1.42857143;
+    color: #161616;
+}
+
+flux-eco-ui-tree-element {
+    padding: 0 4px 0 calc(4px + 4px);
+    margin-left: 0px;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 14px;
+}
+
+.nodeLine {
+    padding: 3px 0 3px 14px;
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.nodeLabel {
+    padding-left: 4px;
+}
+
+.collapsed:before {
+    content: "";
+    background-image: url("/public/flux-eco-ui-tree-element/assets/fonts/collapsed.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    margin-left: -20px;
+}
+
+.expanded:before {
+    content: "";
+    background-image: url("/public/flux-eco-ui-tree-element/assets/fonts/expanded.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    margin-left: -20px;
+}
