@@ -25,10 +25,10 @@ export class FluxEcoUiTreeElement extends HTMLElement {
      */
     constructor(validatedConfig) {
         super();
+        this.#id = this.#createId(validatedConfig);
+        this.setAttribute("id", this.#id);
 
-        if (validatedConfig.hasOwnProperty("id")) {
-            this.#id = validatedConfig.id;
-        }
+
         this.#settings = validatedConfig.settings;
         if (validatedConfig.hasOwnProperty("initialState")) {
             this.#state = validatedConfig.initialState;
@@ -36,7 +36,19 @@ export class FluxEcoUiTreeElement extends HTMLElement {
 
         this.#shadow = this.attachShadow({mode: 'closed'});
         this.#shadow.appendChild(FluxEcoUiTreeElement.linkStyleSheet);
+        this.#contentContainer = this.#createContentContainerElement(this.#id)
+        this.#shadow.appendChild(this.#contentContainer);
+    }
 
+    /**
+     * @param validatedConfig
+     * @returns {string}
+     */
+    #createId(validatedConfig) {
+        if (validatedConfig.hasOwnProperty("id")) {
+            return validatedConfig.id;
+        }
+        return FluxEcoUiTreeElement.tagName;
     }
 
     static get linkStyleSheet() {
@@ -59,14 +71,6 @@ export class FluxEcoUiTreeElement extends HTMLElement {
     }
 
     connectedCallback() {
-
-        if (this.#id === null) {
-            this.#id = [this.parentElement.id, FluxEcoUiTreeElement.tagName].join("/");
-        }
-        this.setAttribute("id", this.#id);
-
-        this.#contentContainer = this.#createContentContainerElement(this.#id)
-        this.#shadow.appendChild(this.#contentContainer);
         if (this.#state) {
             this.#applyStateChanged(this.#state)
         }
@@ -88,21 +92,19 @@ export class FluxEcoUiTreeElement extends HTMLElement {
     }
 
     #applyStateChanged(validatedState) {
-        this.#contentContainer.innerHTML = "";
-        //
-        const rootNodeElement = document.createElement("ul");
-
-        console.log(validatedState);
-
         const rootNode = validatedState.rootNode;
+        if (rootNode === undefined || rootNode === null) {
+            return;
+        }
+        this.#contentContainer.innerHTML = "";
+        const rootNodeElement = document.createElement("ul");
         const children = rootNode.children;
-        console.log(children);
         Object.entries(children).forEach(([key, node]) => {
-            console.log(node);
             const nodeElement = this.renderNode(node);
             rootNodeElement.appendChild(nodeElement)
         });
         this.#contentContainer.appendChild(rootNodeElement);
+
     }
 
 
@@ -113,17 +115,11 @@ export class FluxEcoUiTreeElement extends HTMLElement {
      * @returns {HTMLElement} The rendered node element.
      */
     renderNode(node) {
-
-        console.log(node);
-
-
         // create a node element
         const nodeElement = document.createElement('li');
         const nodeLine = document.createElement('span');
         nodeLine.className = "nodeLine";
-
         const nodeLabel = document.createElement('span');
-
         nodeLabel.className = "nodeLabel";
         const children = node.children;
         if (children !== null && children !== undefined) {
@@ -163,10 +159,8 @@ export class FluxEcoUiTreeElement extends HTMLElement {
                 data: node.data,
                 children: node.children
             }
-            console.log(this.#state.nodes);
             const newState = this.#state;
             newState.nodes[node.id] = newNode;
-
             this.changeState(newState);
             return;
         });
