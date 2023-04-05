@@ -1,3 +1,5 @@
+/** @typedef {import("./types/FluxEcoUiTreeElementConfig.mjs")} FluxEcoUiTreeElementConfig */
+
 export class FluxEcoUiTreeElement extends HTMLElement {
     /**
      * @type {string|null}
@@ -70,12 +72,6 @@ export class FluxEcoUiTreeElement extends HTMLElement {
         return new FluxEcoUiTreeElement(validatedConfig);
     }
 
-    connectedCallback() {
-        if (this.#state) {
-            this.#applyStateChanged(this.#state)
-        }
-    }
-
     /**
      * @returns {HTMLElement}
      */
@@ -87,6 +83,9 @@ export class FluxEcoUiTreeElement extends HTMLElement {
     }
 
     changeState(newState) {
+
+        console.log(newState);
+
         //todo validate
         this.#applyStateChanged(newState);
     }
@@ -122,17 +121,14 @@ export class FluxEcoUiTreeElement extends HTMLElement {
         const nodeLabel = document.createElement('span');
         nodeLabel.className = "nodeLabel";
         const children = node.children;
-        if (children !== null && children !== undefined) {
-            if (Object.keys(children).length > 0) {
-                if (node.status.expanded === false) {
-                    nodeLabel.classList.add("collapsed");
-                }
-                if (node.status.expanded === true) {
-                    nodeLabel.classList.add("expanded");
-                }
+        Object.entries(children ?? {}).forEach(([key, childNode]) => {
+            if (node.status.expanded === false) {
+                nodeLabel.classList.add("collapsed");
             }
-        }
-
+            if (node.status.expanded === true) {
+                nodeLabel.classList.add("expanded");
+            }
+        });
 
         nodeLabel.innerText = node.data.label;
         nodeLine.appendChild(nodeLabel);

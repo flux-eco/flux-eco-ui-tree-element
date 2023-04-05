@@ -1,3 +1,6 @@
+/** @typedef {import("./types/FluxEcoUiTreeElementSettings.mjs")} FluxEcoUiTreeElementSettings */
+/** @typedef {import("./types/FluxEcoUiTreeElementState.mjs")} FluxEcoUiTreeElementState */
+
 /**
  * FluxEcoUiTreeElementConfig configs.
  * @typedef {Object} FluxEcoUiTreeElementConfig
