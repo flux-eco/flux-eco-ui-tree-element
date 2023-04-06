@@ -1,6 +1,6 @@
-import {FluxEcoUiTreeElement} from "./flux-eco-ui-tree-element/FluxEcoUiTreeElement.mjs";
+import {FluxEcoUiTreeElement} from "../../FluxEcoUiTreeElement.mjs";
 
-const state = /** @type {FluxEcoUiTreeElementState} */  {
+const state = /** @type {FluxEcoUiTreeElementAttributes} */  {
     rootNode: {
         treeId: "myTreeId",
         parentId: null,

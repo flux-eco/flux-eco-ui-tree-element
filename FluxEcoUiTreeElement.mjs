@@ -10,9 +10,9 @@ export class FluxEcoUiTreeElement extends HTMLElement {
      */
     #settings;
     /**
-     * @type {FluxEcoUiTreeElementState|null}
+     * @type {FluxEcoUiTreeElementAttributes|null}
      */
-    #state;
+    #attributes;
     /**
      * @type {HTMLElement}
      */
@@ -23,32 +23,35 @@ export class FluxEcoUiTreeElement extends HTMLElement {
     #shadow;
 
     /**
+     * @type {array}
+     */
+    #subscribers;
+
+    /**
      * @param {FluxEcoUiTreeElementConfig} validatedConfig
      */
     constructor(validatedConfig) {
         super();
-        this.#id = this.#createId(validatedConfig);
-        this.setAttribute("id", this.#id);
-
-
+        this.#subscribers = [];
+        if (validatedConfig.hasOwnProperty("id")) {
+            this.#id = validatedConfig.id;
+        }
         this.#settings = validatedConfig.settings;
         if (validatedConfig.hasOwnProperty("initialState")) {
-            this.#state = validatedConfig.initialState;
+            this.#attributes = validatedConfig.initialState;
         }
 
         this.#shadow = this.attachShadow({mode: 'closed'});
         this.#shadow.appendChild(FluxEcoUiTreeElement.linkStyleSheet);
-        this.#contentContainer = this.#createContentContainerElement(this.#id)
-        this.#shadow.appendChild(this.#contentContainer);
     }
 
     /**
-     * @param validatedConfig
+     * @param validatedAttributes
      * @returns {string}
      */
-    #createId(validatedConfig) {
-        if (validatedConfig.hasOwnProperty("id")) {
-            return validatedConfig.id;
+    #createId(validatedAttributes) {
+        if (validatedAttributes.hasOwnProperty("id")) {
+            return validatedAttributes.id;
         }
         return FluxEcoUiTreeElement.tagName;
     }
@@ -72,6 +75,18 @@ export class FluxEcoUiTreeElement extends HTMLElement {
         return new FluxEcoUiTreeElement(validatedConfig);
     }
 
+    connectedCallback() {
+        if (this.#id === null) {
+            this.#id = [this.parentElement.id, FluxEcoUiTreeElement.tagName].join("/");
+        }
+        this.setAttribute("id", this.#id);
+        this.#contentContainer = this.#createContentContainerElement(this.#id)
+        this.#shadow.appendChild(this.#contentContainer);
+        if (this.#attributes) {
+            this.#applyAttributesChanged(this.#attributes)
+        }
+    }
+
     /**
      * @returns {HTMLElement}
      */
@@ -82,16 +97,26 @@ export class FluxEcoUiTreeElement extends HTMLElement {
         return contentContainer;
     }
 
-    changeState(newState) {
-
-        console.log(newState);
-
+    changeAttributes(newAttributes) {
+        console.log(newAttributes);
         //todo validate
-        this.#applyStateChanged(newState);
+        this.#applyAttributesChanged(newAttributes);
     }
 
-    #applyStateChanged(validatedState) {
-        const rootNode = validatedState.rootNode;
+    /**
+     * Subscribes to the event triggered when a node is clicked.
+     *
+     * @param {function} subscriber - A function to be called when the event is triggered.
+     * The function should include an argument containing the data of the clicked node.
+     * Example: function(nodeAttributes) { console.log('Node clicked:', nodeAttributes); }
+     */
+    subscribeToNodeClickedEvent(subscriber) {
+        console.log(subscriber);
+        this.#subscribers.push(subscriber);
+    }
+
+    #applyAttributesChanged(validatedAttributes) {
+        const rootNode = validatedAttributes.rootNode;
         if (rootNode === undefined || rootNode === null) {
             return;
         }
@@ -103,7 +128,6 @@ export class FluxEcoUiTreeElement extends HTMLElement {
             rootNodeElement.appendChild(nodeElement)
         });
         this.#contentContainer.appendChild(rootNodeElement);
-
     }
 
 
@@ -136,7 +160,6 @@ export class FluxEcoUiTreeElement extends HTMLElement {
 
         // add a click event listener to expand/collapse the node
         nodeLine.addEventListener('click', async () => {
-
             if (node.status.expanded === true) {
                 node.status = {
                     expanded: false
@@ -155,9 +178,17 @@ export class FluxEcoUiTreeElement extends HTMLElement {
                 data: node.data,
                 children: node.children
             }
-            const newState = this.#state;
-            newState.nodes[node.id] = newNode;
-            this.changeState(newState);
+            const newAttributes = this.#attributes;
+            newAttributes.nodes[node.id] = newNode;
+            this.changeAttributes(newAttributes);
+
+            if(this.#subscribers.length > 0) {
+                // Notify all subscribers
+                for (const subscriber of this.#subscribers) {
+                    subscriber(newNode);
+                }
+            }
+
             return;
         });
 

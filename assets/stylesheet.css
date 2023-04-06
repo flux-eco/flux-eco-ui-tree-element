@@ -28,7 +28,7 @@ ul {
 
 .collapsed:before {
     content: "";
-    background-image: url("/public/flux-eco-ui-tree-element/assets/fonts/collapsed.svg");
+    background-image: url("/flux-eco-ui-tree-element/assets/collapsed.svg");
     background-repeat: no-repeat;
     background-size: contain;
     width: 18px;
@@ -39,7 +39,7 @@ ul {
 
 .expanded:before {
     content: "";
-    background-image: url("/public/flux-eco-ui-tree-element/assets/fonts/expanded.svg");
+    background-image: url("/flux-eco-ui-tree-element/assets/expanded.svg");
     background-repeat: no-repeat;
     background-size: contain;
     width: 18px;

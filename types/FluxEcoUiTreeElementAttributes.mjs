@@ -1,6 +1,6 @@
 /**
  * Object representing the state of a map marker
- * @typedef {Object} FluxEcoUiTreeElementState
+ * @typedef {Object} FluxEcoUiTreeElementAttributes
  * @property {string} id - id of the tree
  * @property {object} nodeDataSchema
  * @property {NodeState} rootNode
